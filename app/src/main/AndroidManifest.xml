@@ -18,10 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Citypulse">
 
-        <!-- ✅ Activity Kedua (Setting) -->
         <activity android:name=".SettingActivity" />
 
-        <!-- ✅ Activity Utama (Main) -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
