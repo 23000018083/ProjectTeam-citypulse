@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Settings"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Account -->
+        <TextView
+            android:id="@+id/tvAccount"
+            android:text="Account"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:paddingVertical="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Notification -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="12dp">
+
+            <TextView
+                android:text="Notification"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+
+            <Switch
+                android:id="@+id/switchNotification"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- Logout -->
+        <Button
+            android:id="@+id/btnLogout"
+            android:text="Logout"
+            android:backgroundTint="#FF7043"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Delete Account -->
+        <Button
+            android:id="@+id/btnDeleteAccount"
+            android:text="Delete Account"
+            android:backgroundTint="#E53935"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Report Bug -->
+        <Button
+            android:id="@+id/btnReportBug"
+            android:text="Report a Bug"
+            android:backgroundTint="#6C63FF"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>
