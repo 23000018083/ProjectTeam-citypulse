@@ -58,7 +58,10 @@ class LoginActivity : AppCompatActivity() {
         }
     }
     private fun navigateToMain() {
-        val intent = Intent(this, MainActivity::class.java)
+        // UBAH: Langsung ke MapsActivity (Dashboard)
+        val intent = Intent(this, MapsActivity::class.java)
+
+        // Flag ini memastikan user tidak bisa menekan tombol 'Back' ke layar login
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()

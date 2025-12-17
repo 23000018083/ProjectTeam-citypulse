@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">citypulse</string>
+    <string name="title_activity_maps">MAPS</string>
 </resources>

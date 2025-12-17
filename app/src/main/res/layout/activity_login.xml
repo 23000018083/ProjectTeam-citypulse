@@ -41,7 +41,7 @@
 
             <EditText
                 android:id="@+id/etName"
-                android:hint="Name"
+                android:hint="Nama"
                 android:layout_marginTop="24dp"
                 android:padding="12dp"
                 android:background="@drawable/edittext_background"
@@ -60,7 +60,7 @@
 
             <EditText
                 android:id="@+id/etPassword"
-                android:hint="Password"
+                android:hint="Kata Sandi"
                 android:inputType="textPassword"
                 android:layout_marginTop="12dp"
                 android:padding="12dp"
@@ -125,7 +125,7 @@
                     android:layout_height="wrap_content"/>
 
                 <TextView
-                    android:text="Sign in"
+                    android:text="Masuk"
                     android:textColor="#5586E2"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
