@@ -1,78 +1,98 @@
 package com.example.citypulse
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
-import com.google.firebase.auth.FirebaseAuth
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.citypulse.databinding.ActivityProfileBinding
 import com.google.firebase.database.*
 
 class ProfileActivity : AppCompatActivity() {
 
-    private lateinit var tvUserName: TextView
-    private lateinit var tvUserEmail: TextView
-    private lateinit var tvUserLocation: TextView
-    private lateinit var imgProfile: ImageView
-    private lateinit var btnBack: ImageView
-
+    private lateinit var binding: ActivityProfileBinding
+    private lateinit var postsAdapter: PostAdapter
     private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
+        // 1. Menggunakan View Binding agar sinkron dengan XML baru
+        binding = ActivityProfileBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // Inisialisasi komponen UI
-        tvUserName = findViewById(R.id.txtName)
-        tvUserEmail = findViewById(R.id.txtUsername)
-        tvUserLocation = findViewById(R.id.txtLocation)
-        imgProfile = findViewById(R.id.imgProfile)
-        btnBack = findViewById(R.id.btnBack)
-
-        // Menyambung ke Firebase Realtime Database
         database = FirebaseDatabase.getInstance().reference
 
-        // Ambil user ID dari Firebase Auth
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        // 2. Inisialisasi RecyclerView untuk menampilkan "Postingan Saya"
+        setupRecyclerView()
 
-        if (userId != null) {
-            // Ambil data pengguna dari Firebase Realtime Database
-            database.child("users").child(userId).addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        // Ambil data pengguna dari snapshot
-                        val user = snapshot.getValue(User::class.java)
+        // 3. Ambil data User & Postingan berdasarkan SharedPreferences
+        loadData()
 
-                        // Menampilkan data pengguna di UI
-                        tvUserName.text = user?.name ?: "Nama Pengguna"
-                        tvUserEmail.text = user?.email ?: "Email tidak tersedia"
-                        tvUserLocation.text = user?.location ?: "Lokasi tidak tersedia"
+        // 4. Inisialisasi Navigasi Footer
+        setupBottomNavigation()
+    }
 
-                        // Menampilkan foto profil
-                        Glide.with(this@ProfileActivity)
-                            .load(user?.profilePictureUrl)
-                            .circleCrop()  // Membuat gambar berbentuk bulat
-                            .into(imgProfile)
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    // Tangani error jika ada
-                }
-            })
-        }
-
-        // Tombol Kembali
-        btnBack.setOnClickListener {
-            finish() // Kembali ke halaman sebelumnya
+    private fun setupRecyclerView() {
+        postsAdapter = PostAdapter()
+        binding.recyclerViewPosts.apply {
+            layoutManager = LinearLayoutManager(this@ProfileActivity)
+            adapter = postsAdapter
         }
     }
 
-    // Data model untuk User
-    data class User(
-        var name: String = "",
-        var email: String = "",
-        var location: String = "",
-        var profilePictureUrl: String = ""
-    )
+    private fun loadData() {
+        val sharedPrefs = getSharedPreferences("USER_PREFS", Context.MODE_PRIVATE)
+        val userId = sharedPrefs.getString("CURRENT_USER_ID", "")
+        val usernameShared = sharedPrefs.getString("USERNAME", "") // Gunakan ini untuk filter lebih aman
+
+        if (!userId.isNullOrEmpty()) {
+            // Ambil Data Profil
+            database.child("users").child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val user = snapshot.getValue(UserModel::class.java)
+                    if (user != null) {
+                        binding.txtName.text = user.nama
+                        binding.txtUsername.text = user.email
+
+                        // JALANKAN pengambilan post DI SINI setelah nama user terisi
+                        fetchMyPosts(user.nama)
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {}
+            })
+        }
+    }
+
+    private fun fetchMyPosts(namaUser: String) {
+        database.child("posts").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val myPosts = mutableListOf<PostData>()
+                for (postSnapshot in snapshot.children) {
+                    val post = postSnapshot.getValue(PostData::class.java)
+                    // Filter menggunakan namaUser yang sudah pasti didapat dari Firebase
+                    if (post != null && post.pembuat == namaUser) {
+                        myPosts.add(post)
+                    }
+                }
+                postsAdapter.submitList(myPosts.reversed())
+            }
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
+    private fun setupBottomNavigation() {
+        // Navigasi ke Home (Maps)
+        binding.navHome.setOnClickListener {
+            val intent = Intent(this, MapsActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+        }
+
+        // Navigasi ke Setting
+        binding.navSetting.setOnClickListener {
+            startActivity(Intent(this, SettingActivity::class.java))
+        }
+
+        // navProfile tidak perlu onClick karena sudah berada di halaman Profile
+    }
 }

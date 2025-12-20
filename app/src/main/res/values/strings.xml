@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">citypulse</string>
     <string name="title_activity_maps">MAPS</string>
-    <string-array name="danger_categories">
+    <string-array name="kategori_kejadian">
         <item>Rendah</item>
         <item>Sedang</item>
-        <item>Tinggi</item>
+        <item>Darurat</item>
     </string-array>
 
     <!-- Warna untuk setiap tingkat bahaya -->

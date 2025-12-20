@@ -3,37 +3,33 @@ package com.example.citypulse
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.LinearLayout
+import android.widget.FrameLayout
 import android.widget.TextView
 
+// Gunakan FrameLayout sebagai parent agar cocok dengan CardView di XML
 class NotificationItemView @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
-) : LinearLayout(context, attrs) {
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val tvTitle: TextView
-    private val tvMessage: TextView
-    private val tvTime: TextView
+    // Gunakan lazy atau inisialisasi di init
+    private lateinit var tvTitle: TextView
+    private lateinit var tvMessage: TextView
+    private lateinit var tvTime: TextView
 
     init {
-        // Pastikan menggunakan layout XML yang benar untuk item notifikasi
-        LayoutInflater.from(context).inflate(R.layout.activity_notificationitemview, this, true)
-
-        tvTitle = findViewById(R.id.tvTitle)
-        tvMessage = findViewById(R.id.tvMessage)
-        tvTime = findViewById(R.id.tvTime)
-
-        orientation = VERTICAL
+        val view = LayoutInflater.from(context).inflate(R.layout.activity_notificationitemview, this, true)
+        tvTitle = view.findViewById(R.id.tvTitle)
+        tvMessage = view.findViewById(R.id.tvMessage)
+        tvTime = view.findViewById(R.id.tvTime)
     }
 
-    // Metode bind untuk mengikat data ke tampilan
-    fun bind(
-        title: String,
-        message: String,
-        time: String
-    ) {
-        tvTitle.text = title
-        tvMessage.text = message
+    fun bind(title: String?, message: String?, time: String) {
+        // Tambahkan pengecekan null/kosong untuk memastikan teks terlihat
+        tvTitle.text = if (title.isNullOrEmpty()) "Kategori Kosong" else title
+        tvMessage.text = if (message.isNullOrEmpty()) "Status Kosong" else message
         tvTime.text = time
     }
+
 }
